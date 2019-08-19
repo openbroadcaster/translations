@@ -1,6 +1,6 @@
 <?php
 
-class Translations extends OBFModule {
+class TranslationsModule extends OBFModule {
   public $name = 'Translations';
   public $description = 'Add multi-language support to OpenBroadcaster.';
 
