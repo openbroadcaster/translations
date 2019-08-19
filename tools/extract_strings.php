@@ -1,5 +1,7 @@
 <?php
 
+$debug = false;
+
 if (php_sapi_name() != 'cli') exit();
 
 require('../../../components.php');
@@ -21,7 +23,13 @@ extract_datat_matches($dir_html, $t_strings);
 
 $t_strings = array_values(array_unique($t_strings));
 
-var_dump($t_strings);
+if ($debug) var_dump($t_strings);
+
+$db->query('TRUNCATE `module_translations_sources`;');
+foreach ($t_strings as $source) {
+  $value = [ 'string' => $source ];
+  $db->insert('module_translations_sources', $value);
+}
 
 function extract_slashslasht_matches ($directory, &$t_strings) {
   foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
