@@ -1,6 +1,7 @@
 <?php
 
-$debug = false;
+$debug    = false;
+$nomodify = false;
 
 if (php_sapi_name() != 'cli') exit();
 
@@ -25,10 +26,12 @@ $t_strings = array_values(array_unique($t_strings));
 
 if ($debug) var_dump($t_strings);
 
-$db->query('TRUNCATE `module_translations_sources`;');
-foreach ($t_strings as $source) {
-  $value = [ 'string' => $source ];
-  $db->insert('module_translations_sources', $value);
+if (!$nomodify) {
+  $db->query('TRUNCATE `module_translations_sources`;');
+  foreach ($t_strings as $source) {
+    $value = [ 'string' => $source ];
+    $db->insert('module_translations_sources', $value);
+  }
 }
 
 function extract_slashslasht_matches ($directory, &$t_strings) {
@@ -55,7 +58,8 @@ function extract_datat_matches ($directory, &$t_strings) {
     $dom->loadHTML(file_get_contents($file->getPathname()));
     $xpath = new DOMXpath($dom);
     foreach ($xpath->query('//*[@data-t]') as $element) {
-      $t_strings[] = trim($element->textContent);
+      $value = trim($element->textContent);
+      if ($value != '') $t_strings[] = $value;
     }
   }
 }
