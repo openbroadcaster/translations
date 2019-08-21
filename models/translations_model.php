@@ -44,4 +44,14 @@ class TranslationsModel extends OBFModel {
     return [true, 'Successfully loaded language overview.', $result];
   }
 
+  public function language_delete ($data) {
+    $this->db->where('id', $data['language_id']);
+    $this->db->delete('module_translations_languages');
+
+    $this->db->where('language_id', $data['language_id']);
+    $this->db->delete('module_translations_values');
+
+    return [true, 'Successfully removed language.'];
+  }
+
 }

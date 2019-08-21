@@ -31,7 +31,7 @@ OBModules.Translations = new function () {
     OB.API.post('translations', 'language_save', post, function (response) {
       if (response.status) {
         OB.UI.closeModalWindow();
-        OBModules.Translations.open();
+        OBModules.Translations.languageOverview();
         $('#translations_message').obWidget('success', response.msg);
       } else {
         $('#translations_newlang_message').obWidget('error', response.msg);
@@ -64,16 +64,29 @@ OBModules.Translations = new function () {
     });
   }
 
-  this.languageView = function () {
+  this.languageView = function (lang_id) {
     // TODO
   }
 
-  this.languageDelete = function () {
-    // TODO
+  this.languageDelete = function (lang_id) {
+    OB.UI.confirm({
+      text: "Are you sure you want to delete this language?",
+      okay_class: "delete",
+      callback: function () {
+        OBModules.Translations.languageDeleteConfirm(lang_id);
+      }
+    });
   }
 
-  this.languageDeleteConfirm = function () {
-    // TODO
+  this.languageDeleteConfirm = function (lang_id) {
+    var post = {language_id: lang_id};
+
+    OB.API.post('translations', 'language_delete', post, function (response) {
+      var msg_result = (response.status) ? 'success' : 'error';
+      $('#translations_message').obWidget(msg_result, response.msg);
+
+      OBModules.Translations.languageOverview();
+    });
   }
 
   /*************

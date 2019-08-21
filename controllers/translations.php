@@ -21,4 +21,8 @@ class Translations extends OBFController {
     return $this->model('language_overview');
   }
 
+  public function language_delete () {
+    return $this->model('language_delete', $this->data);
+  }
+
 }
