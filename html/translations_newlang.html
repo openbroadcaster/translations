@@ -1,0 +1,20 @@
+<obwidget id="translations_newlang_message" type="message"></obwidget>
+
+<h2>New Language</h2>
+
+<fieldset>
+  <div class="fieldrow">
+    <label class="required" data-t>Name</label>
+    <input type="text" id="translations_lang_name">
+  </div>
+
+  <div class="fieldrow">
+    <label class="required" data-t>Code</label>
+    <input type="text" id="translations_lang_code">
+  </div>
+
+  <div class="fieldrow">
+    <button class="add" data-t onclick="OBModules.Translations.languageSave()">Save</button>
+    <button data-t onclick="OB.UI.closeModalWindow()">Close</button>
+  </div>
+</fieldset>

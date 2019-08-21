@@ -1,10 +1,25 @@
-<div>
-  <h1>Translations</h1>
-  <obwidget type="message" id="translations_message"></obwidget>
+<h1>Translations</h1>
 
-  <fieldset>
-    <div class="fieldrow">
-      <label>Dummy Label</label>
-    </div>
-  </fieldset>
-</div>
+<h2>Languages</h2>
+
+<obwidget type="message" id="translations_message"></obwidget>
+
+<fieldset>
+  <div class="fieldrow">
+    <table id="translations_languages" class="table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Language Name</th>
+          <th>Translations</th>
+          <th></th>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fieldrow">
+    <button class="add" onclick="OBModules.Translations.languageAdd()">Add Language</button>
+  </div>
+</fieldset>
