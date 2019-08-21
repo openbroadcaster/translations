@@ -10,7 +10,7 @@ class TranslationsModule extends OBFModule {
 
   public function install () {
     $this->db->insert('users_permissions', [
-      'category'    => 'translations',
+      'category'    => 'administration',
       'description' => 'manage translations',
       'name'        => 'translations_module'
     ]);
