@@ -54,4 +54,41 @@ class TranslationsModel extends OBFModel {
     return [true, 'Successfully removed language.'];
   }
 
+  public function language_view ($data) {
+    $this->db->where('language_id', $data['language_id']);
+    $values = $this->db->get('module_translations_values');
+    $sources = $this->db->get('module_translations_sources');
+
+    $results = array();
+
+    foreach ($values as $key => $value) {
+      $this->db->where('string', $value['source_str']);
+      $src_exists = ($this->db->get_one('module_translations_sources') ? true : false);
+
+      $results[] = array(
+        'source_str'    => $value['source_str'],
+        'result_str'    => $value['result_str'],
+        'source_exists' => $src_exists
+      );
+    }
+
+    foreach ($sources as $source) {
+      $val_exists = false;
+      foreach ($values as $value) {
+        if ($value['source_str'] == $source['string']) {
+          $val_exists = true;
+          break;
+        }
+      }
+
+      if (!$val_exists) $results[] = array(
+        'source_str'    => $source['string'],
+        'result_str'    => '',
+        'source_exists' => true
+      );
+    }
+
+    return [true, 'Successfully loaded language translations.', $results];
+  }
+
 }

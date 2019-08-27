@@ -16,3 +16,15 @@
   padding-bottom: 6px;
   height: 30px;
 }
+
+.translation-source-noexist {
+  color: #f9c018;
+}
+
+#translations_single_values th {
+  min-width: 400px;
+}
+
+#translations_single_values td textarea {
+  min-width: 400px;
+}

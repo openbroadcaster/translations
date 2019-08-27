@@ -1,0 +1,29 @@
+<h1>Translations</h1>
+
+<obwidget id="translations_single_message"></obwidget>
+
+<fieldset>
+  <div class="fieldrow">
+    <button class="edit" onclick="OBModules.Translations.translationsUpdate()">Update Translations</button>
+    <button onclick="OBModules.Translations.open()">Close Translations</button>
+    <input id="translations_single_id" type="hidden">
+  </div>
+
+  <div class="fieldrow">
+    <table id="translations_single_values" class="table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Translation</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fieldrow">
+    <button class="edit" onclick="OBModules.Translations.translationsUpdate()">Update Translations</button>
+    <button onclick="OBModules.Translations.open()">Close Translations</button>
+  </div>
+</fieldset>

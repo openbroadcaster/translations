@@ -65,7 +65,30 @@ OBModules.Translations = new function () {
   }
 
   this.languageView = function (lang_id) {
-    // TODO
+    OB.UI.replaceMain('modules/translations/translations_single.html');
+    $('#translations_single_id').val(lang_id);
+
+    $('#translations_single_values tbody').empty();
+    OB.API.post('translations', 'language_view', {language_id: lang_id}, function (response) {
+      var msg_result = response.status ? 'success' : 'error';
+      if (!response.status) {
+        OBModules.Translations.open();
+        $('#translations_message').obWidget(msg_result, response.msg);
+        return false;
+      }
+
+      $(response.data).each(function (index, element) {
+        var $html = $('<tr/>');
+
+        var $source_str = $('<td/>').text(element.source_str);
+        if (!element.source_exists) $source_str.addClass('translation-source-noexist');
+        var $result_str = $('<td/>').append($('<textarea/>').val(element.result_str));
+
+        $html.append($source_str).append($result_str);
+        $('#translations_single_values tbody').append($html);
+      });
+
+    });
   }
 
   this.languageDelete = function (lang_id) {
