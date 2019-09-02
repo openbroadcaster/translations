@@ -12,7 +12,7 @@ class TranslationsModel extends OBFModel {
     }
 
     $this->db->where('code', $data['code']);
-    if (!empty($this->db->get_one('module_translations_languages'))) {
+    if (!empty($this->db->get_one('translations_languages'))) {
       return [false, 'Language code already exists.'];
     }
 
@@ -25,7 +25,7 @@ class TranslationsModel extends OBFModel {
       'code' => $data['code']
     ];
 
-    if (!$this->db->insert('module_translations_languages', $language)) {
+    if (!$this->db->insert('translations_languages', $language)) {
       return [false, 'Failed to insert language into database.'];
     }
 
@@ -33,11 +33,11 @@ class TranslationsModel extends OBFModel {
   }
 
   public function language_overview () {
-    $result = $this->db->get('module_translations_languages');
+    $result = $this->db->get('translations_languages');
 
     foreach ($result as $index => $lang) {
       $this->db->where('language_id', $lang['id']);
-      $translations = $this->db->get('module_translations_values');
+      $translations = $this->db->get('translations_values');
       $result[$index]['translations'] = count($translations);
     }
 
@@ -46,24 +46,24 @@ class TranslationsModel extends OBFModel {
 
   public function language_delete ($data) {
     $this->db->where('id', $data['language_id']);
-    $this->db->delete('module_translations_languages');
+    $this->db->delete('translations_languages');
 
     $this->db->where('language_id', $data['language_id']);
-    $this->db->delete('module_translations_values');
+    $this->db->delete('translations_values');
 
     return [true, 'Successfully removed language.'];
   }
 
   public function language_view ($data) {
     $this->db->where('language_id', $data['language_id']);
-    $values = $this->db->get('module_translations_values');
-    $sources = $this->db->get('module_translations_sources');
+    $values = $this->db->get('translations_values');
+    $sources = $this->db->get('translations_sources');
 
     $results = array();
 
     foreach ($values as $key => $value) {
       $this->db->where('string', $value['source_str']);
-      $src_exists = ($this->db->get_one('module_translations_sources') ? true : false);
+      $src_exists = ($this->db->get_one('translations_sources') ? true : false);
 
       $results[] = array(
         'source_str'    => $value['source_str'],
@@ -93,7 +93,7 @@ class TranslationsModel extends OBFModel {
 
   public function language_update_validate ($data) {
     $this->db->where('id', $data['language_id']);
-    if (!$this->db->get_one('module_translations_languages')) {
+    if (!$this->db->get_one('translations_languages')) {
       return [false, 'Language does not exist.'];
     }
 
@@ -108,10 +108,10 @@ class TranslationsModel extends OBFModel {
 
   public function language_update ($data) {
     $this->db->where('language_id', $data['language_id']);
-    $this->db->delete('module_translations_values');
+    $this->db->delete('translations_values');
 
     foreach ($data['translations'] as $translation) {
-      $this->db->insert('module_translations_values', [
+      $this->db->insert('translations_values', [
         'source_str'  => $translation[0],
         'result_str'  => $translation[1],
         'language_id' => $data['language_id']

@@ -27,10 +27,10 @@ $t_strings = array_values(array_unique($t_strings));
 if ($debug) var_dump($t_strings);
 
 if (!$nomodify) {
-  $db->query('TRUNCATE `module_translations_sources`;');
+  $db->query('TRUNCATE `translations_sources`;');
   foreach ($t_strings as $source) {
     $value = [ 'string' => $source ];
-    $db->insert('module_translations_sources', $value);
+    $db->insert('translations_sources', $value);
   }
 }
 
