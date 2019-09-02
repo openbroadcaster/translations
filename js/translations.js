@@ -117,7 +117,27 @@ OBModules.Translations = new function () {
   *************/
 
   this.translationsUpdate = function () {
-    // TODO
+    var post = {};
+    post.language_id = $('#translations_single_id').val();
+    post.translations = [];
+
+    $('#translations_single_values tbody tr').each(function (i, elem) {
+      if ($(elem).find('td:eq(1) textarea').val() != '') {
+        post.translations.push([
+          $(elem).find('td:eq(0)').html(),
+          $(elem).find('td:eq(1) textarea').val()
+        ]);
+      }
+    });
+
+    OB.API.post('translations', 'language_update', post, function (response) {
+      var msg_result = (response.status) ? 'success' : 'error';
+      if (msg_result == 'success') { 
+        OBModules.Translations.languageView($('#translations_single_id').val());
+      }
+      $('#translations_single_message').obWidget(msg_result, response.msg);
+    });
+
   }
 
 }

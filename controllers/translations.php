@@ -29,4 +29,13 @@ class Translations extends OBFController {
     return $this->model('language_view', $this->data);
   }
 
+  public function language_update () {
+    $result = $this->model('language_update_validate', $this->data);
+    if (!$result[0]) {
+      return $result;
+    }
+
+    return $this->model('language_update', $this->data);
+  }
+
 }

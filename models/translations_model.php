@@ -91,4 +91,34 @@ class TranslationsModel extends OBFModel {
     return [true, 'Successfully loaded language translations.', $results];
   }
 
+  public function language_update_validate ($data) {
+    $this->db->where('id', $data['language_id']);
+    if (!$this->db->get_one('module_translations_languages')) {
+      return [false, 'Language does not exist.'];
+    }
+
+    foreach ($data['translations'] as $elem) {
+      if (count($elem) != 2) {
+        return [false, 'One or more translations have an invalid number of elements.'];
+      }
+    }
+
+    return [true, 'Validation successful.'];
+  }
+
+  public function language_update ($data) {
+    $this->db->where('language_id', $data['language_id']);
+    $this->db->delete('module_translations_values');
+
+    foreach ($data['translations'] as $translation) {
+      $this->db->insert('module_translations_values', [
+        'source_str'  => $translation[0],
+        'result_str'  => $translation[1],
+        'language_id' => $data['language_id']
+      ]);
+    }
+
+    return [true, 'Successfully updated translations.'];
+  }
+
 }
