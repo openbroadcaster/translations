@@ -5,7 +5,7 @@ OBModules.Translations = new function () {
   }
 
   this.initMenu = function () {
-    OB.UI.addSubMenuItem('admin', 'Translations', 'translations', OBModules.Translations.open, 150);
+    OB.UI.addSubMenuItem('admin', 'Translations', 'translations', OBModules.Translations.open, 150, 'translations_module');
   }
 
   this.open = function () {
