@@ -35,10 +35,14 @@ class TranslationsModel extends OBFModel {
   public function language_overview () {
     $result = $this->db->get('translations_languages');
 
+    $this->db->query('SELECT COUNT(`id`) FROM `translations_sources`');
+    $total = $this->db->assoc_row()['COUNT(`id`)'];
+
     foreach ($result as $index => $lang) {
       $this->db->where('language_id', $lang['id']);
       $translations = $this->db->get('translations_values');
       $result[$index]['translations'] = count($translations);
+      $result[$index]['total'] = $total;
     }
 
     return [true, 'Successfully loaded language overview.', $result];

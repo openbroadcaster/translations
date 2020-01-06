@@ -52,7 +52,7 @@ OBModules.Translations = new function () {
         var $lang = $('<tr/>');
         $lang.append($('<td/>').text(element.code));
         $lang.append($('<td/>').text(element.name));
-        $lang.append($('<td/>').text(element.translations));
+        $lang.append($('<td/>').text(element.translations + ' / ' + element.total + ' (' + ((element.translations / element.total) * 100).toFixed(2) + '%)'));
 
         var $edit = '<button class="edit" onclick="OBModules.Translations.languageView(' + element.id + ')">Edit</button>';
         var $delete = '<button class="delete" onclick="OBModules.Translations.languageDelete(' + element.id + ')">Delete</button>';
@@ -69,7 +69,7 @@ OBModules.Translations = new function () {
     $('#translations_single_id').val(lang_id);
 
     $('#translations_single_values tbody').empty();
-    OB.API.post('translations', 'language_view', {language_id: lang_id}, function (response) {
+    OB.API.post('translations', 'language_view', { language_id: lang_id }, function (response) {
       var msg_result = response.status ? 'success' : 'error';
       if (!response.status) {
         OBModules.Translations.open();
@@ -85,6 +85,15 @@ OBModules.Translations = new function () {
         var $result_str = $('<td/>').append($('<textarea/>').val(element.result_str));
 
         $html.append($source_str).append($result_str);
+
+        if (!element.source_exists) {
+          $html.addClass('translation-nosrc');
+        } else if (element.result_str == '') {
+          $html.addClass('translation-empty');
+        } else {
+          $html.addClass('translation-done');
+        }
+
         $('#translations_single_values tbody').append($html);
       });
 
@@ -116,13 +125,36 @@ OBModules.Translations = new function () {
    TRANSLATIONS
   *************/
 
+  this.translationsFilter = function (elem) {
+    $('.translations_filter').val($(elem).val());
+
+    switch ($(elem).val()) {
+      case 'translated':
+        $('.translation-done').show();
+        $('.translation-empty, .translation-nosrc').hide();
+      break;
+      case 'not_translated':
+        $('.translation-empty').show();
+        $('.translation-done, .translation-nosrc').hide();
+      break;
+      case 'missing_src':
+        $('.translation-nosrc').show();
+        $('.translation-done, .translation-empty').hide();
+      break;
+      default:
+        $('.translation-done, .translation-empty, .translation-nosrc').show();
+      break;
+    }
+
+  }
+
   this.translationsUpdate = function () {
     var post = {};
     post.language_id = $('#translations_single_id').val();
     post.translations = [];
 
     $('#translations_single_values tbody tr').each(function (i, elem) {
-      if ($(elem).find('td:eq(1) textarea').val() != '') {
+      if ($(elem).find('td:eq(1) textarea').val().trim() != '') {
         post.translations.push([
           $(elem).find('td:eq(0)').html(),
           $(elem).find('td:eq(1) textarea').val()
@@ -132,7 +164,7 @@ OBModules.Translations = new function () {
 
     OB.API.post('translations', 'language_update', post, function (response) {
       var msg_result = (response.status) ? 'success' : 'error';
-      if (msg_result == 'success') { 
+      if (msg_result == 'success') {
         OBModules.Translations.languageView($('#translations_single_id').val());
       }
       $('#translations_single_message').obWidget(msg_result, response.msg);
