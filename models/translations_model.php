@@ -114,10 +114,15 @@ class TranslationsModel extends OBFModel {
     $this->db->where('language_id', $data['language_id']);
     $this->db->delete('translations_values');
 
-    foreach ($data['translations'] as $translation) {
+    // put into a key/value array to remove duplicates (client-side weirdness)
+    $strings = [];
+    foreach($data['translations'] as $translation) $strings[$translation[0]] = $translation[1];
+
+    // add to table
+    foreach ($strings as $source=>$result) {
       $this->db->insert('translations_values', [
-        'source_str'  => $translation[0],
-        'result_str'  => $translation[1],
+        'source_str'  => $source,
+        'result_str'  => $result,
         'language_id' => $data['language_id']
       ]);
     }
