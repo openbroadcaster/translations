@@ -39,8 +39,13 @@ class TranslationsModel extends OBFModel {
     $total = $this->db->assoc_row()['COUNT(`id`)'];
 
     foreach ($result as $index => $lang) {
-      $this->db->where('language_id', $lang['id']);
-      $translations = $this->db->get('translations_values');
+      $this->db->query('
+        SELECT DISTINCT translations_values.source_str AS string FROM translations_values
+        LEFT JOIN translations_sources ON translations_values.source_str = translations_sources.string
+        WHERE translations_sources.string IS NOT NULL AND translations_values.language_id="'.$this->db->escape($lang['id']).'"
+      ');
+      
+      $translations = $this->db->indexed_list();
       $result[$index]['translations'] = count($translations);
       $result[$index]['total'] = $total;
     }
