@@ -78,7 +78,7 @@ OBModules.Translations = new function () {
       }
 
       $(response.data).each(function (index, element) {
-        var $html = $('<tr/>');
+        var $html = $('<tr/>').attr('data-index',element.source_index);
 
         var $source_str = $('<td/>').text(element.source_str);
         if (!element.source_exists) $source_str.addClass('translation-source-noexist');
@@ -147,6 +147,33 @@ OBModules.Translations = new function () {
     }
 
   }
+  
+  this.translationsSort = function(elem) {
+    $('.translations_sort').val($(elem).val());
+    switch ($(elem).val()) {
+      case 'ascending':
+        $('#translations_single_values tbody').html( $('#translations_single_values tbody tr').sort(function(a, b)
+          {
+            return $(a).find('td:first-child').text().toLowerCase() > $(b).find('td:first-child').text().toLowerCase() ? 1 : -1; 
+          }) 
+        );
+      break;
+      case 'descending':
+        $('#translations_single_values tbody').html( $('#translations_single_values tbody tr').sort(function(a, b)
+          {
+            return $(a).find('td:first-child').text().toLowerCase() < $(b).find('td:first-child').text().toLowerCase() ? 1 : -1; 
+          }) 
+        );
+      break;
+      default:
+        $('#translations_single_values tbody').html( $('#translations_single_values tbody tr').sort(function(a, b)
+          {
+            return parseInt($(a).attr('data-index')) > parseInt($(b).attr('data-index')) ? 1 : -1; 
+          }) 
+        );
+      break;
+    }
+  }
 
   this.translationsUpdate = function () {
     var post = {};
@@ -156,7 +183,7 @@ OBModules.Translations = new function () {
     $('#translations_single_values tbody tr').each(function (i, elem) {
       if ($(elem).find('td:eq(1) textarea').val().trim() != '') {
         post.translations.push([
-          $(elem).find('td:eq(0)').html(),
+          $(elem).find('td:eq(0)').text(),
           $(elem).find('td:eq(1) textarea').val()
         ]);
       }

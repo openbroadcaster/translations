@@ -10,6 +10,12 @@
       <option value="not_translated">Not Translated</option>
       <option value="missing_src">Missing Source</option>
     </select>
+    
+    <select class="translations_sort" onchange="OBModules.Translations.translationsSort(this)">
+      <option value="default" selected>Default Sort</option>
+      <option value="ascending">Ascending</option>
+      <option value="descending">Descending</option>
+    </select>
 
     <button class="edit" onclick="OBModules.Translations.translationsUpdate()">Update Translations</button>
     <button onclick="OBModules.Translations.open()">Close Translations</button>
@@ -29,12 +35,19 @@
     </table>
   </div>
 
+
   <div class="fieldrow">
     <select class="translations_filter" onchange="OBModules.Translations.translationsFilter(this)">
       <option value="all" selected>All</option>
       <option value="translated">Translated</option>
       <option value="not_translated">Not Translated</option>
       <option value="missing_src">Missing Source</option>
+    </select>
+    
+    <select class="translations_sort" onchange="OBModules.Translations.translationsSort(this)">
+      <option value="default" selected>Default Sort</option>
+      <option value="ascending">Ascending</option>
+      <option value="descending">Descending</option>
     </select>
 
     <button class="edit" onclick="OBModules.Translations.translationsUpdate()">Update Translations</button>

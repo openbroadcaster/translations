@@ -39,8 +39,9 @@ class TranslationsModel extends OBFModel {
     $total = $this->db->assoc_row()['COUNT(`id`)'];
 
     foreach ($result as $index => $lang) {
+      // BINARY to force case sensitive: https://stackoverflow.com/questions/19462919/mysql-select-distinct-should-be-case-sensitive
       $this->db->query('
-        SELECT DISTINCT translations_values.source_str AS string FROM translations_values
+        SELECT DISTINCT (BINARY translations_values.source_str) AS string FROM translations_values
         LEFT JOIN translations_sources ON translations_values.source_str = translations_sources.string
         WHERE translations_sources.string IS NOT NULL AND translations_values.language_id="'.$this->db->escape($lang['id']).'"
       ');
@@ -80,8 +81,12 @@ class TranslationsModel extends OBFModel {
         'source_exists' => $src_exists
       );
     }
-
-    foreach ($sources as $source) {
+    
+    $source_indices = [];
+    foreach ($sources as $index=>$source) {
+    
+      $source_indices[$source['string']] = $index;
+    
       $val_exists = false;
       foreach ($values as $value) {
         if ($value['source_str'] == $source['string']) {
@@ -96,6 +101,9 @@ class TranslationsModel extends OBFModel {
         'source_exists' => true
       );
     }
+    
+    foreach($results as $index=>$result) $results[$index]['source_index'] = $source_indices[$result['source_str']] ?? -1;
+    usort($results, function($a, $b) { return $a['source_index'] > $b['source_index']; });
 
     return [true, 'Successfully loaded language translations.', $results];
   }
