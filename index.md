@@ -3,10 +3,11 @@ layout: default
 title: index
 ---
 
+# Translations
+{:.no_toc}
+
 * TOC
 {:toc}
-
-## Translations
 
 ![ Translations](img/translations.png ){: .Translations}
 
